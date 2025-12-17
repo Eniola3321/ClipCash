@@ -21,6 +21,7 @@ model User {
   provider    String?   // e.g., 'google', 'facebook', 'local' for OAuth provider
   providerId  String?   // Unique ID from OAuth provider (e.g., Google's user ID)
   name        String?
+   picture     String?   // 👈 ADD THIS
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   videos      Video[]   // One-to-many: User owns multiple videos
@@ -31,14 +32,26 @@ model User {
 
 // Video model: The original long video uploaded or linked
 model Video {
-  id        Int       @id @default(autoincrement())
-  userId    Int
-  url       String    // YouTube URL or file path (e.g., S3 link)
-  status    String    // e.g., 'pending', 'processing', 'completed', 'error'
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)  // Delete videos if user is deleted
-  clips     Clip[]    // One-to-many: Video generates multiple clips
+  id               Int      @id @default(autoincrement())
+  userId           Int
+  title            String?  // e.g., "My Podcast Episode #1"
+  description      String?  // Optional long description
+  sourceType       String   @default("youtube") // 'youtube' or 'upload'
+  sourceUrl              String   // YouTube URL or file path (S3, local, etc.)
+  thumbnail        String?  // Preview image URL
+  duration         Int?     // In seconds (extracted later)
+  fileSize         BigInt?  // In bytes (for uploaded files)
+  status           String   @default("pending") // pending, processing, completed, failed
+  processingError  String?  // If status = 'failed', store reason
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clips            Clip[]   // Future clips generated from this video
+
+  @@index([userId])
+  @@index([status])           // Optional: faster filtering by status
 }
 
 // Clip model: Generated short clips from the video
