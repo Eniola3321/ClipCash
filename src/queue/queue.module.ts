@@ -2,7 +2,10 @@
 import { Module, Global } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import { VideoProcessor } from './video.processor';
+import { CloudinaryService } from 'src/common/cloudinary.service';
+import { PrismaModule } from 'src/prisma/prisma.module';
 import { VideosModule } from 'src/videos/videos.module';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Global()
 @Module({
@@ -16,9 +19,10 @@ import { VideosModule } from 'src/videos/videos.module';
     BullModule.registerQueue({
       name: 'video-processing',
     }),
-    VideosModule, // needed for VideosService
+    PrismaModule,
+    VideosModule,
   ],
-  providers: [VideoProcessor],
+  providers: [VideoProcessor, CloudinaryService, PrismaService],
   exports: [BullModule],
 })
 export class QueueModule {}

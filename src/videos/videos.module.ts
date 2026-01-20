@@ -14,6 +14,6 @@ import { BullModule } from '@nestjs/bull';
   ],
   controllers: [VideosController],
   providers: [VideosService, CloudinaryService],
-  exports: [VideosService],
+  exports: [VideosService, CloudinaryService],
 })
 export class VideosModule {}

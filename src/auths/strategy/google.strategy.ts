@@ -31,10 +31,10 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     profile: any,
     done: VerifyCallback,
   ) {
-    console.log('🔑 Google Access Token:', accessToken?.slice(0, 20) + '...');
-    console.log('🔄 Google Refresh Token:', refreshToken ? 'YES' : 'NO');
-    console.log('👤 Google Profile ID:', profile.id);
-    console.log('📧 Email:', profile.emails?.[0]?.value);
+    // console.log('🔑 Google Access Token:', accessToken?.slice(0, 20) + '...');
+    // console.log('🔄 Google Refresh Token:', refreshToken ? 'YES' : 'NO');
+    // console.log('👤 Google Profile ID:', profile.id);
+    // console.log('📧 Email:', profile.emails?.[0]?.value);
 
     const user = await this.authsService.ValidateOAuthUsers({
       provider: 'google',
